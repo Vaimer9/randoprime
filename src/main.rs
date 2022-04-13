@@ -12,32 +12,34 @@ fn is_prime(num: usize) -> bool {
 }
 
 fn findallprimes(num: usize) -> Vec<usize> {
-    let mut rt = Vec::new();
-    (1..num).for_each(|x| if is_prime(x){ rt.push(x); });
-    rt
+    (1..num)
+        .fold(
+            Vec::new(),
+            |mut xs, x| if is_prime(x){ xs.push(x); xs } else { xs }
+        )
 }
 
 fn factorize(num: usize) -> BTreeSet<usize> {
-    let mut rt = BTreeSet::new();
     findallprimes(num)
         .into_iter()
-        .for_each(|x| if num % x == 0 { rt.insert(x); });
-    rt
+        .fold(
+            BTreeSet::new(),
+            |mut xs, x| if num % x == 0 { xs.insert(x); xs } else { xs }
+        )
 }
 
 fn print(mut num: usize, mut factors: BTreeSet<usize>) {
-    
     if num == 1 {
         println!("  | 1");
         return;
     }
-
-    if let Some(x) = factors.pop_first() {
+    if let Some(x) = factors.first() {
         if num % x == 0 {
-            println!("{x}|{num}");
+            println!("{x} | {num}");
             num /= x;
-            print(num, factors.pop_first())
+            print(num, factors)
         } else {
+            factors.pop_first();
             print(num, factors);
         }
     }
