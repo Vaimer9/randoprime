@@ -46,6 +46,11 @@ fn print(mut num: usize, mut factors: BTreeSet<usize>) {
 }
 
 fn main() {
-    let number = 45470971;
+    let number = std::env::args()
+        .nth(1)
+        .unwrap()
+        .parse()
+        .unwrap();
+
     print(number, factorize(number));
 }
