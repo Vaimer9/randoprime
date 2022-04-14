@@ -3,16 +3,16 @@
 use std::collections::BTreeSet;
 
 fn is_prime(num: usize) -> bool {
-    for x in 1..num {
+    for x in 2..(num-1) {
         if num % x == 0 {
-            return true;
+            return false;
         }
     }
-    false
+    true
 }
 
 fn findallprimes(num: usize) -> Vec<usize> {
-    (1..num)
+    (2..num)
         .fold(
             Vec::new(),
             |mut xs, x| if is_prime(x){ xs.push(x); xs } else { xs }
