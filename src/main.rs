@@ -3,27 +3,19 @@
 use std::collections::BTreeSet;
 
 fn is_prime(num: usize) -> bool {
-    (2..(num-1))
+    (2..(num as f64).sqrt().floor() as usize)
+        .skip(1)
         .fold(
             true,
             |_, x| (num % x != 0)
         )
 }
 
-fn findallprimes(num: usize) -> Vec<usize> {
+fn findallprimes(num: usize) -> BTreeSet<usize> {
     (2..num)
         .fold(
-            Vec::new(),
-            |mut xs, x| if is_prime(x){ xs.push(x); xs } else { xs }
-        )
-}
-
-fn factorize(num: usize) -> BTreeSet<usize> {
-    findallprimes(num)
-        .into_iter()
-        .fold(
             BTreeSet::new(),
-            |mut xs, x| if num % x == 0 { xs.insert(x); xs } else { xs }
+            |mut xs, x| if is_prime(x){ xs.insert(x); xs } else { xs }
         )
 }
 
@@ -32,6 +24,7 @@ fn print(mut num: usize, mut factors: BTreeSet<usize>) {
         println!("  | 1");
         return;
     }
+
     if let Some(x) = factors.first() {
         if num % x == 0 {
             println!("{x} | {num}");
@@ -51,5 +44,5 @@ fn main() {
         .parse()
         .unwrap();
 
-    print(number, factorize(number));
+    print(number, findallprimes(number));
 }
