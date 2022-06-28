@@ -1,21 +1,21 @@
 #![feature(map_first_last)]
 
-use std::{collections::BTreeSet, u128};
+use std::{collections::BTreeSet, u64};
 
-fn is_prime(num: u128) -> bool {
+fn is_prime(num: u64) -> bool {
     !((2..num)
         .any(|x| num % x == 0))
 }
 
-fn findallprimes(num: u128) -> BTreeSet<u128> {
-    (2..num)
+fn findallprimes(num: u64) -> BTreeSet<u64> {
+    (2..f64::sqrt(num as f64).floor() as u64)
         .filter(|x| is_prime(*x))
         .collect()
 }
 
-fn factorize(mut num: u128, mut factors: BTreeSet<u128>) {
+fn factorize(mut num: u64, mut factors: BTreeSet<u64>) {
     if num == 1 {
-        println!("    | 1");
+        println!("{:<3} | 1", "");
         return;
     }
 
@@ -23,7 +23,7 @@ fn factorize(mut num: u128, mut factors: BTreeSet<u128>) {
         if num % x == 0 {
             println!("{:<3} | {num}", x );
             num /= x;
-            factorize(num, factors)
+            factorize(num, factors);
         } else {
             factors.pop_first();
             factorize(num, factors);
@@ -37,6 +37,11 @@ fn main() {
         .unwrap()
         .parse()
         .unwrap();
+
+    if is_prime(number) {
+        println!("{number} is a prime number");
+        return;
+    }
 
     factorize(number, findallprimes(number));
 }
