@@ -1,38 +1,32 @@
 #![feature(map_first_last)]
 
-use std::collections::BTreeSet;
+use std::{collections::BTreeSet, u128};
 
-fn is_prime(num: usize) -> bool {
-    (2..(num as f64).sqrt().floor() as usize)
-        .skip(1)
-        .fold(
-            true,
-            |_, x| (num % x != 0)
-        )
+fn is_prime(num: u128) -> bool {
+    !((2..num)
+        .any(|x| num % x == 0))
 }
 
-fn findallprimes(num: usize) -> BTreeSet<usize> {
+fn findallprimes(num: u128) -> BTreeSet<u128> {
     (2..num)
-        .fold(
-            BTreeSet::new(),
-            |mut xs, x| if is_prime(x){ xs.insert(x); xs } else { xs }
-        )
+        .filter(|x| is_prime(*x))
+        .collect()
 }
 
-fn print(mut num: usize, mut factors: BTreeSet<usize>) {
+fn factorize(mut num: u128, mut factors: BTreeSet<u128>) {
     if num == 1 {
-        println!("  | 1");
+        println!("    | 1");
         return;
     }
 
     if let Some(x) = factors.first() {
         if num % x == 0 {
-            println!("{x} | {num}");
+            println!("{:<3} | {num}", x );
             num /= x;
-            print(num, factors)
+            factorize(num, factors)
         } else {
             factors.pop_first();
-            print(num, factors);
+            factorize(num, factors);
         }
     }
 }
@@ -44,5 +38,5 @@ fn main() {
         .parse()
         .unwrap();
 
-    print(number, findallprimes(number));
+    factorize(number, findallprimes(number));
 }
